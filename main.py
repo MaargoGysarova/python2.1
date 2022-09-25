@@ -1,4 +1,4 @@
-import os
+import os, shutil
 import requests
 from bs4 import BeautifulSoup
 
@@ -18,7 +18,7 @@ def get_image_url(name):
     page = 0
     response = requests.get("https://yandex.ru/images/search?p={page}&text={name}&lr=51&rpt=image")
     data = []
-    soup = BeautifulSoup(page.text, "html.parser")
+    soup = BeautifulSoup(response.text, "html.parser")
     images = soup.find_all('img')
     while(True):
        for image in images:
@@ -30,7 +30,10 @@ def get_image_url(name):
           if (i > 999): break
           page += 1
 
-def download_image(url,name,i):
+def download_image(image_url,name,i):
  with open("dataset/name/'{i:04d}.jpg','wb") as f:
-     im=requests.get(url)
+     im=requests.get(image_url)
      f.write(im.content)
+
+def clear_folder(name):
+    shutil.rmtree(name)

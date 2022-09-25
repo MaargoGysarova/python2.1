@@ -7,15 +7,16 @@ url2 = 'https://yandex.ru/images/search?text=leopard'
 # response = requests.get(url1)
 # soup = BeautifulSoup(response.text, 'lxml')
 
-os.mkdir("dataset")
-os.mkdir("dataset/" + "tiger")
-os.mkdir("dataset/" + "leopard")
+# os.mkdir("dataset")
+# os.mkdir("dataset/" + "tiger")
+# os.mkdir("dataset/" + "leopard")
 
 # images = soup.find_all('img')
 
 def get_image_url(name):
     i = 1
     page = 0
+    os.mkdir("dataset/" + "{name}")
     response = requests.get("https://yandex.ru/images/search?p={page}&text={name}&lr=51&rpt=image")
     data = []
     soup = BeautifulSoup(response.text, "html.parser")
@@ -37,3 +38,10 @@ def download_image(image_url,name,i):
 
 def clear_folder(name):
     shutil.rmtree(name)
+
+def cheak_folder():
+    try:
+        os.mkdir("dataset")
+    except:
+        clear_folder("dataset")
+        os.mkdir("dataset")

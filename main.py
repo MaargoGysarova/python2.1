@@ -16,16 +16,20 @@ def get_size_image(name, i):
     return width, height
 
 def download_image(image_url, name, i):
-    with open(f"dataset/tmp_{name}/{i:04d}.jpg", "wb") as f:
-        im = requests.get(f"https:{image_url}")
-        f.write(im.content)
-    image = cv2.imread(f"dataset/tmp_{name}/{i:04d}.jpg")
-    if get_size_image(name, i) == (1, 1):
-        print('ааааааа')
-        return
+    image_url = f"https:{image_url}"
+    if not 'https:https:' in image_url:
+        print(image_url)
+        with open(f"dataset/tmp_{name}/{i:04d}.jpg", "wb") as f:
 
-    cv2.imwrite(f'dataset/{name}/{i:04d}.jpg', image)
-    os.remove(f"dataset/tmp_{name}/{i:04d}.jpg")
+            im = requests.get(f"{image_url}")
+            f.write(im.content)
+        image = cv2.imread(f"dataset/tmp_{name}/{i:04d}.jpg")
+        if get_size_image(name, i) == (1, 1):
+            print('ааааааа')
+            return
+
+        cv2.imwrite(f'dataset/{name}/{i:04d}.jpg', image)
+        os.remove(f"dataset/tmp_{name}/{i:04d}.jpg")
 
 
 def get_image_url(name):
@@ -47,6 +51,10 @@ def get_image_url(name):
         if i > 999:
             break
         page += 1
+        response = requests.get(f"https://yandex.ru/images/search?p={page}&text={name}&lr=51&rpt=image",
+                                headers=HEADERS)
+        soup = BeautifulSoup(response.text, "html.parser")
+        images = soup.find_all('img')
 
 
 def clear_folder(name):

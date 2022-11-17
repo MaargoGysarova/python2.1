@@ -5,7 +5,10 @@ import requests
 from PIL import Image
 from bs4 import BeautifulSoup
 
-HEADERS = {"User-Agent": "Mozilla/5.0"}
+HEADERS = {
+        'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:72.0) Gecko/20100101 Firefox/72.0',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+    }
 
 # url1 = 'https://yandex.ru/images/search?text=tiger'
 # url2 = 'https://yandex.ru/images/search?text=leopard'
@@ -30,6 +33,9 @@ def download_image(image_url, name, i):
 
         cv2.imwrite(f'dataset/{name}/{i:04d}.jpg', image)
         os.remove(f"dataset/tmp_{name}/{i:04d}.jpg")
+        return True
+    else:
+        return False
 
 
 def get_image_url(name):
@@ -46,8 +52,8 @@ def get_image_url(name):
             if i > 999:
                 break
             if image_url != "":
-                download_image(image_url, name, i)
-                i += 1
+                if download_image(image_url, name, i):
+                    i += 1
         if i > 999:
             break
         page += 1
@@ -69,6 +75,6 @@ def cheak_folder():
         os.mkdir("dataset")
 
 
-cheak_folder()
-get_image_url("tiger")
+#cheak_folder()
+#get_image_url("tiger")
 get_image_url("leopard")
